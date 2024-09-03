@@ -1,0 +1,23 @@
+name: Sync branches
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout original repository
+        uses: actions/checkout@v2
+        with:
+          repository: mejbaulmubin786/My-All-Note
+          fetch-depth: 0
+      
+      - name: Push branches to fork
+        run: |
+          git remote set-url origin https://github.com/mejbaulmubin786/My-All-Note.git
+          for branch in $(git branch -r | grep 'origin/' | grep -v '\->' | sed 's#origin/##'); do
+            git checkout $branch
+            git push origin $branch
+          done
